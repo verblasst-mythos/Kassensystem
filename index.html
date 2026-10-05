@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <title>Masora Döner — Kasse</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+  <!-- ======================= Anmeldung ======================= -->
+  <main id="login" class="login hidden">
+    <div class="login-card">
+      <div class="brand-mark brand-logo" aria-hidden="true">M</div>
+      <h1 class="brand-name">Masora Döner</h1>
+      <p class="login-sub brand-sub">Kassensystem</p>
+
+      <div id="pin-display" class="pin-display" aria-label="PIN-Eingabe">
+        <span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span>
+      </div>
+      <p id="login-error" class="login-error" role="alert"></p>
+
+      <div id="pin-pad" class="pin-pad">
+        <button type="button" data-key="1">1</button>
+        <button type="button" data-key="2">2</button>
+        <button type="button" data-key="3">3</button>
+        <button type="button" data-key="4">4</button>
+        <button type="button" data-key="5">5</button>
+        <button type="button" data-key="6">6</button>
+        <button type="button" data-key="7">7</button>
+        <button type="button" data-key="8">8</button>
+        <button type="button" data-key="9">9</button>
+        <button type="button" data-key="clear" class="soft" aria-label="Eingabe löschen">C</button>
+        <button type="button" data-key="0">0</button>
+        <button type="button" data-key="del" class="soft" aria-label="Letzte Ziffer löschen">⌫</button>
+      </div>
+      <p id="login-hint" class="login-hint">PIN eingeben oder mit der Tastatur tippen</p>
+    </div>
+  </main>
+
+  <!-- ======================= Anwendung ======================= -->
+  <div id="app" class="app-shell hidden">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark brand-logo" aria-hidden="true">M</div>
+        <div class="brand-copy">
+          <strong class="brand-name">Masora Döner</strong>
+          <span class="brand-sub">Kassensystem</span>
+        </div>
+      </div>
+
+      <nav id="nav" class="main-nav" aria-label="Hauptnavigation">
+        <button class="nav-item" type="button" data-view="kasse" aria-current="true">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 6h18l-1.6 11.2A2 2 0 0 1 17.4 19H6.6a2 2 0 0 1-2-1.8L3 6z"/><path d="M8 6V4.5A3.5 3.5 0 0 1 15 4.5V6"/></svg>
+          </span>
+          <span class="nav-label">Kasse</span>
+          <span class="nav-badge hidden" id="parked-badge" title="Geparkte Bons">0</span>
+        </button>
+
+        <button class="nav-item" type="button" data-view="bestellungen">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>
+          </span>
+          <span class="nav-label">Bestellungen</span>
+        </button>
+
+        <button class="nav-item hidden" type="button" data-view="verwaltung" id="nav-admin">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+          </span>
+          <span class="nav-label">Verwaltung</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div id="duty-chip" class="duty-chip off">
+          <span class="status-dot"></span>
+          <div class="duty-text">
+            <strong id="duty-state">Nicht im Dienst</strong>
+            <span id="duty-since">Zum Kassieren bitte einstempeln</span>
+          </div>
+          <button id="duty-toggle" class="btn btn-sm btn-primary" type="button">Einstempeln</button>
+        </div>
+
+        <div class="employee-card">
+          <span class="employee-avatar" id="user-avatar">?</span>
+          <span class="employee-info">
+            <strong id="user-name">—</strong>
+            <small id="user-role">Kasse</small>
+          </span>
+          <button id="logout" class="icon-btn on-dark" type="button" aria-label="Abmelden" title="Abmelden">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <section class="main-content">
+      <header class="topbar">
+        <div class="topbar-heading">
+          <div class="brand-mark brand-logo mobile-brand" aria-hidden="true">M</div>
+          <div>
+            <p class="eyebrow" id="page-eyebrow">Schnellverkauf</p>
+            <h1 id="page-title">Kasse</h1>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="session-chip" title="Automatische Abmeldung in …">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <span class="session-label">Abmeldung in</span><span id="session-left">--:--</span>
+          </div>
+          <div class="clock" aria-live="off">
+            <strong id="current-time">--:--</strong>
+            <span id="current-date">--</span>
+          </div>
+          <button id="session-extend" class="icon-btn" type="button" aria-label="Sitzung verlängern" title="Sitzung verlängern">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5"/></svg>
+          </button>
+          <button id="fullscreen-button" class="icon-btn" type="button" aria-label="Vollbild" title="Vollbild">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+          </button>
+          <button class="icon-btn" type="button" data-theme-toggle aria-label="Design wechseln"></button>
+        </div>
+      </header>
+
+      <div id="duty-banner" class="duty-banner hidden" role="status">
+        <span>Du bist nicht im Dienst — zum Kassieren bitte einstempeln.</span>
+        <button class="btn btn-sm btn-primary" id="duty-banner-btn" type="button">Jetzt einstempeln</button>
+      </div>
+
+      <!-- ===== Kasse ===== -->
+      <div class="view" data-view-panel="kasse">
+        <div class="pos-layout">
+          <div class="product-area">
+            <div class="search-row">
+              <label class="search-box">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                <input id="product-search" type="search" placeholder="Artikel suchen …" autocomplete="off" aria-label="Artikel suchen" />
+                <kbd>F2</kbd>
+              </label>
+              <button id="fav-filter" class="chip chip-toggle" type="button" aria-pressed="false" title="Nur Favoriten zeigen">★ Favoriten</button>
+            </div>
+
+            <div id="cat-bar" class="cat-bar" role="tablist" aria-label="Kategorien"></div>
+
+            <div id="product-grid" class="product-grid"></div>
+          </div>
+
+          <aside class="cart-panel" aria-label="Aktueller Bon">
+            <div class="cart-header">
+              <div class="cart-heading">
+                <p class="eyebrow">Aktueller Bon · <span id="cart-count">0</span> Artikel</p>
+                <div class="seg" id="order-type" role="group" aria-label="Bestellart">
+                  <button type="button" data-type="Hier essen" aria-pressed="true">Hier</button>
+                  <button type="button" data-type="Mitnehmen" aria-pressed="false">Mitnehmen</button>
+                </div>
+              </div>
+              <button id="cart-clear" class="btn btn-sm btn-ghost danger-text" type="button">Leeren</button>
+            </div>
+
+            <div id="cart-items" class="cart-items"></div>
+
+            <div class="cart-extras">
+              <div class="extras-row">
+                <select id="discount-select" class="select" aria-label="Rabatt"></select>
+                <button id="note-btn" class="btn btn-sm" type="button">Notiz</button>
+              </div>
+              <div id="coop-box"></div>
+              <p id="note-preview" class="note-preview hidden"></p>
+            </div>
+
+            <div class="cart-summary">
+              <div class="summary-row"><span>Zwischensumme</span><strong id="sum-subtotal">0,00 €</strong></div>
+              <div class="summary-row discount hidden" id="row-discount">
+                <span id="label-discount">Rabatt</span><strong id="sum-discount">− 0,00 €</strong>
+              </div>
+              <div class="summary-row muted" id="row-vat"><span>enthaltene MwSt.</span><span id="sum-vat">0,00 €</span></div>
+              <div class="summary-total"><span>Gesamt</span><strong id="sum-total">0,00 €</strong></div>
+            </div>
+
+            <div class="cart-actions">
+              <button id="park-btn" class="btn" type="button" title="Bon parken (F6)">Parken</button>
+              <button id="pay-cash" class="btn btn-primary btn-pay" type="button" title="Bar kassieren (F4)">Bar <kbd>F4</kbd></button>
+              <button id="pay-card" class="btn btn-primary btn-pay" type="button" title="Karte kassieren (F8)">Karte <kbd>F8</kbd></button>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      <!-- ===== Bestellungen ===== -->
+      <div class="view hidden" data-view-panel="bestellungen">
+        <div class="stats">
+          <div class="stat accent"><div class="stat-label">Umsatz</div><div class="stat-value" id="o-revenue">0,00 €</div></div>
+          <div class="stat"><div class="stat-label">Bons</div><div class="stat-value" id="o-count">0</div></div>
+          <div class="stat"><div class="stat-label">Ø pro Bon</div><div class="stat-value" id="o-avg">0,00 €</div></div>
+          <div class="stat"><div class="stat-label">Bar</div><div class="stat-value" id="o-cash">0,00 €</div></div>
+          <div class="stat"><div class="stat-label">Karte</div><div class="stat-value" id="o-card">0,00 €</div></div>
+        </div>
+
+        <div class="toolbar">
+          <div class="seg" id="o-range">
+            <button type="button" data-range="today" aria-current="true">Heute</button>
+            <button type="button" data-range="week" aria-current="false">7 Tage</button>
+            <button type="button" data-range="all" aria-current="false">Alle</button>
+          </div>
+          <select id="o-staff" class="select" aria-label="Mitarbeiter"></select>
+          <select id="o-pay" class="select" aria-label="Zahlart">
+            <option value="">Alle Zahlarten</option>
+            <option value="bar">Nur Bar</option>
+            <option value="karte">Nur Karte</option>
+          </select>
+          <select id="o-status" class="select" aria-label="Status">
+            <option value="">Alle Status</option>
+            <option value="ok">Nur gültige</option>
+            <option value="storniert">Nur stornierte</option>
+          </select>
+          <input id="o-search" class="input search-input" type="search" placeholder="Bon-Nr. oder Artikel …" aria-label="Bestellungen durchsuchen" />
+          <span class="spacer"></span>
+          <span class="muted small" id="o-scope"></span>
+          <button class="btn btn-sm" id="o-export" type="button">CSV</button>
+          <button class="btn btn-sm" id="o-reload" type="button">Aktualisieren</button>
+        </div>
+
+        <div class="card" style="margin-top:var(--space-4)">
+          <div class="table-wrap">
+            <table class="data">
+              <thead>
+                <tr><th>Bon</th><th>Zeit</th><th>Details</th><th>Zahlung</th><th class="num">Summe</th><th>Status</th><th></th></tr>
+              </thead>
+              <tbody id="o-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card hidden" id="o-perstaff" style="margin-top:var(--space-6)">
+          <div class="card-head"><span class="card-title">Umsatz je Mitarbeiter</span></div>
+          <div class="table-wrap">
+            <table class="data">
+              <thead>
+                <tr><th>Mitarbeiter</th><th class="num">Bons</th><th class="num">Bar</th><th class="num">Karte</th><th class="num">Umsatz</th><th>Anteil</th><th></th></tr>
+              </thead>
+              <tbody id="o-perstaff-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Verwaltung ===== -->
+      <div class="view hidden" data-view-panel="verwaltung">
+        <div id="admin-subnav" class="subnav" role="tablist">
+          <button type="button" data-tab="produkte">Produkte</button>
+          <button type="button" data-tab="lager">Lager</button>
+          <button type="button" data-tab="rabatte">Rabatte</button>
+          <button type="button" data-tab="kooperationen">Kooperationen</button>
+          <button type="button" data-tab="personal">Personal</button>
+          <button type="button" data-tab="dienstzeiten">Dienstzeiten</button>
+          <button type="button" data-tab="abschluss">Tagesabschluss</button>
+          <button type="button" data-tab="einstellungen">Einstellungen</button>
+        </div>
+        <div id="admin-body" class="admin-body"></div>
+      </div>
+    </section>
+
+    <!-- Bon-Leiste für Tablet/Handy: springt zum Warenkorb -->
+    <button id="cart-fab" class="cart-fab hidden" type="button" aria-label="Bon ansehen">
+      <span><strong id="fab-count">0</strong> Artikel</span>
+      <span class="fab-total" id="fab-total">0,00 €</span>
+      <span class="fab-go">Bon ansehen ↓</span>
+    </button>
+
+    <!-- mobile Navigation -->
+    <nav class="tabbar" id="tabbar" aria-label="Navigation">
+      <button type="button" data-view="kasse" aria-current="true">Kasse</button>
+      <button type="button" data-view="bestellungen">Bestellungen</button>
+      <button type="button" data-view="verwaltung" id="tab-admin" class="hidden">Verwaltung</button>
+    </nav>
+  </div>
+
+  <div id="toasts" class="toast-container" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/db.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/kasse.js"></script>
+  <script src="js/orders.js"></script>
+  <script src="js/admin.js"></script>
+  <script>App.boot();</script>
+</body>
+</html>
